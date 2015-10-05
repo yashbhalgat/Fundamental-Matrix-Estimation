@@ -14,7 +14,7 @@
 using namespace cv;
 using namespace std;
 
-void findPoints(int i, vector<Point2f>& points1, vector<Point2f>& points2){
+vector<Point2f> calcFundMat(int i){
 	stringstream s; // stringstream used for the conversion
 	s << i;
 	
@@ -36,9 +36,15 @@ void findPoints(int i, vector<Point2f>& points1, vector<Point2f>& points2){
 	  cornerSubPix(A2, corners2, Size(11, 11), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 	}
 	
-	points1.insert(points1.end(), corners1.begin(), corners1.end());
-	points2.insert(points2.end(), corners2.begin(), corners2.end());
-
+	Mat fundamental_matrix = findFundamentalMat(corners1, corners2, CV_FM_8POINT);//, 3, 0.99);
+	
+	cout<<i<<endl;
+	cout<<fundamental_matrix<<endl;
+	cout<<endl;
+	//for(int i=0; i<54; i++){
+	//	cout<<corners1[i]<<"   "<<corners2[i]<<endl;
+	//}
+	
 	drawChessboardCorners(A1, patternsize, Mat(corners1), patternfound1);
 	imshow("corners1", A1);
 	drawChessboardCorners(A2, patternsize, Mat(corners2), patternfound2);
@@ -46,27 +52,10 @@ void findPoints(int i, vector<Point2f>& points1, vector<Point2f>& points2){
 	waitKey(0);
 }
 
-void calcFundMat(vector<Point2f> points1, vector<Point2f> points2){
-	Mat fundamental_matrix = findFundamentalMat(points1, points2, CV_FM_7POINT);//, 3, 0.99);
-	
-	cout<<"final fundamental matrix"<<endl;
-	cout<<fundamental_matrix<<endl;
-	cout<<endl;
-	//for(int i=0; i<54; i++){
-	//	cout<<corners1[i]<<"   "<<corners2[i]<<endl;
-	//}
-	
-}
-
 int main( int argc, char** argv )
 {
 	namedWindow( "corners1" , CV_WINDOW_NORMAL);
 	namedWindow( "corners2" , CV_WINDOW_NORMAL);
-	vector<Point2f> points1, points2;
-	
-	for(int k=0;k<8;k++) findPoints(k, points1, points2);
-	calcFundMat(points1, points2);
-	cout<<points1.size()<<endl;
-	cout<<points2.size()<<endl;
+	for(int k=0;k<8;k++) calcFundMat(k);
 	//calcFundMat(7);
 }
