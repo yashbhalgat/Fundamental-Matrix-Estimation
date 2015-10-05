@@ -2,7 +2,6 @@
  * Date: 4/10/2015
  */
 
-#include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/core/core.hpp>
@@ -47,7 +46,7 @@ void findPoints(int i, vector<Point2f>& points1, vector<Point2f>& points2){
 }
 
 void calcFundMat(vector<Point2f> points1, vector<Point2f> points2){
-	Mat fundamental_matrix = findFundamentalMat(points1, points2, CV_FM_7POINT);//, 3, 0.99);
+	Mat fundamental_matrix = findFundamentalMat(points1, points2, FM_RANSAC);//, 3, 0.99);
 	
 	cout<<"final fundamental matrix"<<endl;
 	cout<<fundamental_matrix<<endl;
